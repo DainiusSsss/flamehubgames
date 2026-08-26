@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RenderSiteRouteImport } from './routes/render-site'
+import { Route as ApiPublicRenderSiteRouteImport } from './routes/api/public/render-site'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,40 @@ const RenderSiteRoute = RenderSiteRouteImport.update({
   path: '/render-site',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicRenderSiteRoute = ApiPublicRenderSiteRouteImport.update({
+  id: '/api/public/render-site',
+  path: '/api/public/render-site',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/render-site': typeof RenderSiteRoute
+  '/api/public/render-site': typeof ApiPublicRenderSiteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/render-site': typeof RenderSiteRoute
+  '/api/public/render-site': typeof ApiPublicRenderSiteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/render-site': typeof RenderSiteRoute
+  '/api/public/render-site': typeof ApiPublicRenderSiteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/render-site'
+  fullPaths: '/' | '/render-site' | '/api/public/render-site'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/render-site'
-  id: '__root__' | '/' | '/render-site'
+  to: '/' | '/render-site' | '/api/public/render-site'
+  id: '__root__' | '/' | '/render-site' | '/api/public/render-site'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   RenderSiteRoute: typeof RenderSiteRoute
+  ApiPublicRenderSiteRoute: typeof ApiPublicRenderSiteRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RenderSiteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/render-site': {
+      id: '/api/public/render-site'
+      path: '/api/public/render-site'
+      fullPath: '/api/public/render-site'
+      preLoaderRoute: typeof ApiPublicRenderSiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   RenderSiteRoute: RenderSiteRoute,
+  ApiPublicRenderSiteRoute: ApiPublicRenderSiteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
