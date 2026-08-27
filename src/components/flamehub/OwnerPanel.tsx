@@ -14,8 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { supabase } from "@/integrations/supabase/client";
-import { OWNER_CODE } from "@/lib/flamehub-data";
+import { renameMember, unlockOwnerPanel } from "@/lib/flamehub.functions";
 import type { Member } from "@/lib/flamehub-session";
 
 type Props = { members: Member[]; onMembersChanged: () => void };
@@ -23,6 +22,7 @@ type Props = { members: Member[]; onMembersChanged: () => void };
 export function OwnerPanel({ members, onMembersChanged }: Props) {
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState("");
+  const [checking, setChecking] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
   const [savingId, setSavingId] = useState<string | null>(null);
   const [drafts, setDrafts] = useState<Record<string, { first: string; last: string }>>({});
@@ -46,17 +46,22 @@ export function OwnerPanel({ members, onMembersChanged }: Props) {
       return;
     }
     setSavingId(member.id);
-    const { error } = await supabase
-      .from("members")
-      .update({ first_name: draft.first.trim(), last_name: draft.last.trim() })
-      .eq("id", member.id);
-    setSavingId(null);
-    if (error) {
+    try {
+      await renameMember({
+        data: {
+          ownerCode: code,
+          memberId: member.id,
+          firstName: draft.first.trim(),
+          lastName: draft.last.trim(),
+        },
+      });
+      toast.success("Name updated.");
+      onMembersChanged();
+    } catch {
       toast.error("Couldn't save that name.");
-      return;
+    } finally {
+      setSavingId(null);
     }
-    toast.success("Name updated.");
-    onMembersChanged();
   };
 
   return (
@@ -89,13 +94,17 @@ export function OwnerPanel({ members, onMembersChanged }: Props) {
         {!unlocked ? (
           <form
             className="space-y-4"
-            onSubmit={(event) => {
+            onSubmit={async (event) => {
               event.preventDefault();
-              if (code.trim() !== OWNER_CODE) {
+              setChecking(true);
+              try {
+                await unlockOwnerPanel({ data: { ownerCode: code.trim() } });
+                setUnlocked(true);
+              } catch {
                 toast.error("Incorrect owner code.");
-                return;
+              } finally {
+                setChecking(false);
               }
-              setUnlocked(true);
             }}
           >
             <div className="space-y-2">
@@ -108,7 +117,8 @@ export function OwnerPanel({ members, onMembersChanged }: Props) {
                 onChange={(event) => setCode(event.target.value)}
               />
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={checking}>
+              {checking ? <Loader2 className="size-4 animate-spin" /> : null}
               Unlock panel
             </Button>
           </form>

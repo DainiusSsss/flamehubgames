@@ -10,16 +10,19 @@ import { OwnerPanel } from "@/components/flamehub/OwnerPanel";
 import { SoundBooster } from "@/components/flamehub/SoundBooster";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { supabase } from "@/integrations/supabase/client";
+import { getMyMember, listMembers, touchLastSeen } from "@/lib/flamehub.functions";
 import { APPS, GAMES, SOUNDBOARDS } from "@/lib/flamehub-data";
 import {
+  clearSession,
   initials,
   readStoredMemberId,
+  readStoredToken,
   readUnlocked,
-  storeMemberId,
+  storeSession,
   storeUnlocked,
   type Member,
 } from "@/lib/flamehub-session";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -45,19 +48,23 @@ function FlameHubPage() {
   const [hydrated, setHydrated] = useState(false);
   const [me, setMe] = useState<Member | null>(null);
   const [storedId, setStoredId] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [unlocked, setUnlocked] = useState(false);
   const [members, setMembers] = useState<Member[]>([]);
 
   const loadMembers = useCallback(async () => {
-    const { data } = await supabase
-      .from("members")
-      .select("*")
-      .order("created_at", { ascending: true });
-    if (data) setMembers(data as Member[]);
-  }, []);
+    if (!storedId || !token) return;
+    try {
+      const data = await listMembers({ data: { memberId: storedId, token } });
+      setMembers(data as Member[]);
+    } catch {
+      /* session no longer valid; the gate handles re-entry */
+    }
+  }, [storedId, token]);
 
   useEffect(() => {
     setStoredId(readStoredMemberId());
+    setToken(readStoredToken());
     setUnlocked(readUnlocked());
     setHydrated(true);
   }, []);
@@ -65,25 +72,15 @@ function FlameHubPage() {
   useEffect(() => {
     if (!unlocked) return;
     void loadMembers();
-    const channel = supabase
-      .channel("flamehub-members")
-      .on("postgres_changes", { event: "*", schema: "public", table: "members" }, () => {
-        void loadMembers();
-      })
-      .subscribe();
-    return () => {
-      void supabase.removeChannel(channel);
-    };
+    const interval = window.setInterval(() => void loadMembers(), 10000);
+    return () => window.clearInterval(interval);
   }, [unlocked, loadMembers]);
 
   // Keep our own profile row in sync once we know who we are.
   useEffect(() => {
-    if (!unlocked || !storedId) return;
-    void supabase
-      .from("members")
-      .update({ last_seen_at: new Date().toISOString() })
-      .eq("id", storedId);
-  }, [unlocked, storedId]);
+    if (!unlocked || !storedId || !token) return;
+    void touchLastSeen({ data: { memberId: storedId, token } }).catch(() => undefined);
+  }, [unlocked, storedId, token]);
 
   useEffect(() => {
     if (!unlocked || !storedId) return;
@@ -93,18 +90,25 @@ function FlameHubPage() {
 
   const handleReturningUnlock = async () => {
     const id = readStoredMemberId();
-    if (!id) return;
-    const { data } = await supabase.from("members").select("*").eq("id", id).maybeSingle();
-    if (!data) {
-      window.localStorage.removeItem("flamehub.member_id");
+    const storedToken = readStoredToken();
+    if (!id || !storedToken) {
+      clearSession();
       setStoredId(null);
+      setToken(null);
       return;
     }
-    const member = data as Member;
-    setMe(member);
-    setUnlocked(true);
-    storeUnlocked();
-    toast.success(`Welcome back, ${member.first_name}!`);
+    try {
+      const member = (await getMyMember({ data: { memberId: id, token: storedToken } })) as Member;
+      setMe(member);
+      setUnlocked(true);
+      storeUnlocked();
+      toast.success(`Welcome back, ${member.first_name}!`);
+    } catch {
+      clearSession();
+      setStoredId(null);
+      setToken(null);
+      toast.error("Your session expired — set up your profile again.");
+    }
   };
 
   if (!hydrated) return null;
@@ -112,12 +116,13 @@ function FlameHubPage() {
   if (!unlocked) {
     return (
       <AccessGate
-        needsProfile={storedId === null}
+        needsProfile={storedId === null || token === null}
         onUnlocked={() => void handleReturningUnlock()}
-        onRegistered={(member) => {
-          storeMemberId(member.id);
+        onRegistered={(member, newToken) => {
+          storeSession(member.id, newToken);
           storeUnlocked();
           setStoredId(member.id);
+          setToken(newToken);
           setMe(member);
           setUnlocked(true);
           toast.success(`Welcome to FlameHub, ${member.first_name}!`);
@@ -125,6 +130,7 @@ function FlameHubPage() {
       />
     );
   }
+
 
   return (
     <div className="min-h-screen pb-24">
@@ -204,7 +210,7 @@ function FlameHubPage() {
         </Tabs>
       </main>
 
-      {me ? <MessagesDock me={me} members={members} /> : null}
+      {me && token ? <MessagesDock me={me} members={members} token={token} /> : null}
     </div>
   );
 }

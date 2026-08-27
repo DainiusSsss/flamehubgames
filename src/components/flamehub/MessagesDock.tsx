@@ -1,12 +1,12 @@
 import { MessageCircle, Send, Users, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { supabase } from "@/integrations/supabase/client";
+import { listMessages, sendMessage } from "@/lib/flamehub.functions";
 import { initials, type Member } from "@/lib/flamehub-session";
 
 type Message = {
@@ -17,45 +17,29 @@ type Message = {
   created_at: string;
 };
 
-type Props = { me: Member; members: Member[] };
+type Props = { me: Member; members: Member[]; token: string };
 
-export function MessagesDock({ me, members }: Props) {
+export function MessagesDock({ me, members, token }: Props) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null); // null = public chat
   const [draft, setDraft] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  const refresh = useCallback(async () => {
+    try {
+      const data = await listMessages({ data: { memberId: me.id, token } });
+      setMessages(data as Message[]);
+    } catch {
+      /* transient; next poll retries */
+    }
+  }, [me.id, token]);
+
   useEffect(() => {
-    let cancelled = false;
-    void supabase
-      .from("messages")
-      .select("*")
-      .order("created_at", { ascending: true })
-      .limit(500)
-      .then(({ data }) => {
-        if (!cancelled && data) setMessages(data as Message[]);
-      });
-
-    const channel = supabase
-      .channel("flamehub-messages")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages" },
-        (payload) => {
-          setMessages((prev) => {
-            const next = payload.new as Message;
-            return prev.some((m) => m.id === next.id) ? prev : [...prev, next];
-          });
-        },
-      )
-      .subscribe();
-
-    return () => {
-      cancelled = true;
-      void supabase.removeChannel(channel);
-    };
-  }, []);
+    void refresh();
+    const interval = window.setInterval(() => void refresh(), 3000);
+    return () => window.clearInterval(interval);
+  }, [refresh]);
 
   const thread = useMemo(
     () =>
@@ -85,10 +69,14 @@ export function MessagesDock({ me, members }: Props) {
     const body = draft.trim();
     if (!body) return;
     setDraft("");
-    const { error } = await supabase
-      .from("messages")
-      .insert({ sender_id: me.id, recipient_id: activeId, body });
-    if (error) toast.error("Message didn't send.");
+    try {
+      await sendMessage({
+        data: { memberId: me.id, token, recipientId: activeId, body },
+      });
+      await refresh();
+    } catch {
+      toast.error("Message didn't send.");
+    }
   };
 
   return (

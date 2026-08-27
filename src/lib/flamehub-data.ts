@@ -93,4 +93,6 @@ export const SOUNDBOARDS: HubItem[] = [
 ];
 
 export const ACCESS_CODE = "flamehub1243";
-export const OWNER_CODE = "fh32897f";
+// The owner code lives only in server code (src/lib/flamehub-codes.server.ts)
+// so it never ships to the browser.
+
