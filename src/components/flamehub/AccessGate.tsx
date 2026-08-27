@@ -6,9 +6,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { supabase } from "@/integrations/supabase/client";
+import { registerMember } from "@/lib/flamehub.functions";
 import { ACCESS_CODE } from "@/lib/flamehub-data";
 import { fileToAvatarDataUrl, type Member } from "@/lib/flamehub-session";
+
 
 type Props = {
   needsProfile: boolean;
