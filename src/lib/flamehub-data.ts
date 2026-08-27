@@ -4,6 +4,9 @@ export type HubItem = {
   url: string;
   tagline: string;
   emoji: string;
+  /** Sites that hard-block embedding — they open in their own tab instead. */
+  directOnly?: boolean;
+  note?: string;
 };
 
 export const GAMES: HubItem[] = [
@@ -40,6 +43,8 @@ export const GAMES: HubItem[] = [
 export const APPS: HubItem[] = [
   {
     id: "tiktok",
+    directOnly: true,
+    note: "Blocks embedding — opens in its own tab",
     name: "TikTok",
     url: "https://www.tiktok.com",
     tagline: "Short-form video feed",
@@ -47,6 +52,8 @@ export const APPS: HubItem[] = [
   },
   {
     id: "spotify",
+    directOnly: true,
+    note: "Needs its own tab for playback",
     name: "Spotify",
     url: "https://open.spotify.com",
     tagline: "Music and podcasts",
@@ -54,6 +61,8 @@ export const APPS: HubItem[] = [
   },
   {
     id: "snapchat",
+    directOnly: true,
+    note: "Login-only app — opens in its own tab",
     name: "Snapchat",
     url: "https://web.snapchat.com",
     tagline: "Snaps and chats on the web",
@@ -61,6 +70,8 @@ export const APPS: HubItem[] = [
   },
   {
     id: "youtube",
+    directOnly: true,
+    note: "Heavy player — opens in its own tab",
     name: "YouTube",
     url: "https://www.youtube.com",
     tagline: "Videos, music, live streams",
@@ -68,6 +79,8 @@ export const APPS: HubItem[] = [
   },
   {
     id: "chatgpt",
+    directOnly: true,
+    note: "Blocks embedding — opens in its own tab",
     name: "ChatGPT",
     url: "https://chatgpt.com",
     tagline: "AI homework and idea partner",
