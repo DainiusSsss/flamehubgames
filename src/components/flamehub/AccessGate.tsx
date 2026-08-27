@@ -14,8 +14,9 @@ import { fileToAvatarDataUrl, type Member } from "@/lib/flamehub-session";
 type Props = {
   needsProfile: boolean;
   onUnlocked: () => void;
-  onRegistered: (member: Member) => void;
+  onRegistered: (member: Member, token: string) => void;
 };
+
 
 export function AccessGate({ needsProfile, onUnlocked, onRegistered }: Props) {
   const [code, setCode] = useState("");
@@ -55,23 +56,23 @@ export function AccessGate({ needsProfile, onUnlocked, onRegistered }: Props) {
       return;
     }
     setSaving(true);
-    const { data, error } = await supabase
-      .from("members")
-      .insert({
-        first_name: firstName.trim(),
-        last_name: lastName.trim(),
-        avatar_url: avatar,
-      })
-      .select()
-      .single();
-    setSaving(false);
-
-    if (error || !data) {
+    try {
+      const { member, token } = await registerMember({
+        data: {
+          code: code.trim().toLowerCase(),
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          avatarUrl: avatar,
+        },
+      });
+      onRegistered(member as Member, token);
+    } catch {
       toast.error("Couldn't save your profile. Try again.");
-      return;
+    } finally {
+      setSaving(false);
     }
-    onRegistered(data as Member);
   };
+
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-16">
