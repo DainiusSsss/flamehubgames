@@ -210,7 +210,7 @@ function FlameHubPage() {
         </Tabs>
       </main>
 
-      {me ? <MessagesDock me={me} members={members} /> : null}
+      {me && token ? <MessagesDock me={me} members={members} token={token} /> : null}
     </div>
   );
 }
