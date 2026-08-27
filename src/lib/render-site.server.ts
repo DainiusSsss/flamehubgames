@@ -156,7 +156,7 @@ export async function renderSite(request: Request): Promise<Response> {
       method: request.method === "POST" ? "POST" : "GET",
       redirect: "follow",
       headers: outgoing,
-      body: request.method === "POST" ? await request.arrayBuffer() : undefined,
+      body: request.method === "POST" ? await request.arrayBuffer() : null,
     });
 
     const contentType = upstream.headers.get("content-type") ?? "text/html; charset=utf-8";
