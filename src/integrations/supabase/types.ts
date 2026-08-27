@@ -22,6 +22,7 @@ export type Database = {
           id: string
           last_name: string
           last_seen_at: string
+          session_token: string
         }
         Insert: {
           avatar_url?: string | null
@@ -30,6 +31,7 @@ export type Database = {
           id?: string
           last_name: string
           last_seen_at?: string
+          session_token?: string
         }
         Update: {
           avatar_url?: string | null
@@ -38,6 +40,7 @@ export type Database = {
           id?: string
           last_name?: string
           last_seen_at?: string
+          session_token?: string
         }
         Relationships: []
       }
