@@ -8,6 +8,7 @@ export type Member = {
 };
 
 const MEMBER_KEY = "flamehub.member_id";
+const TOKEN_KEY = "flamehub.session_token";
 const UNLOCK_KEY = "flamehub.unlocked";
 
 export function readStoredMemberId(): string | null {
@@ -15,8 +16,20 @@ export function readStoredMemberId(): string | null {
   return window.localStorage.getItem(MEMBER_KEY);
 }
 
-export function storeMemberId(id: string) {
+export function readStoredToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return window.localStorage.getItem(TOKEN_KEY);
+}
+
+export function storeSession(id: string, token: string) {
   window.localStorage.setItem(MEMBER_KEY, id);
+  window.localStorage.setItem(TOKEN_KEY, token);
+}
+
+export function clearSession() {
+  window.localStorage.removeItem(MEMBER_KEY);
+  window.localStorage.removeItem(TOKEN_KEY);
+  window.sessionStorage.removeItem(UNLOCK_KEY);
 }
 
 export function readUnlocked(): boolean {
