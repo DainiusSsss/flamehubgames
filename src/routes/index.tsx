@@ -132,6 +132,8 @@ function FlameHubPage() {
   }
 
 
+  const chatMe = me ?? members.find((member) => member.id === storedId) ?? null;
+
   return (
     <div className="min-h-screen pb-24">
       <header className="border-b border-border">
@@ -203,14 +205,15 @@ function FlameHubPage() {
                 title="MyInstants soundboard"
                 src="/render-site?url=https%3A%2F%2Fwww.myinstants.com"
                 className="h-[70vh] w-full bg-background"
-                allow="autoplay"
+                allow="autoplay; fullscreen"
+                allowFullScreen
               />
             </div>
           </TabsContent>
         </Tabs>
       </main>
 
-      {me && token ? <MessagesDock me={me} members={members} token={token} /> : null}
+      {chatMe && token ? <MessagesDock me={chatMe} members={members} token={token} /> : null}
     </div>
   );
 }
