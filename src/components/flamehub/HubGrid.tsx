@@ -43,27 +43,12 @@ export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
             <h3 className="mt-3 text-2xl leading-none">{item.name}</h3>
             <p className="mt-1 text-sm text-muted-foreground">{item.tagline}</p>
             <div className="mt-4 flex gap-2">
-              {item.directOnly ? (
-                <Button size="sm" asChild>
-                  <a href={item.url} target="_blank" rel="noreferrer noopener">
-                    <ExternalLink className="size-4" />
-                    Open
-                  </a>
-                </Button>
-              ) : (
-                <>
-                  <Button size="sm" onClick={() => setActive(item)}>
-                    <Play className="size-4" />
-                    Launch
-                  </Button>
-                  <Button size="sm" variant="outline" asChild>
-                    <a href={item.url} target="_blank" rel="noreferrer noopener">
-                      New tab
-                    </a>
-                  </Button>
-                </>
-              )}
+              <Button size="sm" onClick={() => setActive(item)}>
+                <Play className="size-4" />
+                Launch
+              </Button>
             </div>
+
             {item.note ? (
               <p className="mt-2 text-xs text-muted-foreground">{item.note}</p>
             ) : null}
