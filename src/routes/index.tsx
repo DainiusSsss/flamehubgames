@@ -11,7 +11,7 @@ import { SoundBooster } from "@/components/flamehub/SoundBooster";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getMyMember, listMembers, touchLastSeen } from "@/lib/flamehub.functions";
-import { APPS, GAMES, SOUNDBOARDS } from "@/lib/flamehub-data";
+import { APPS, GAMES, SOUNDBOARDS, UTILITIES } from "@/lib/flamehub-data";
 import {
   clearSession,
   initials,
@@ -132,7 +132,19 @@ function FlameHubPage() {
   }
 
 
-  const chatMe = me ?? members.find((member) => member.id === storedId) ?? null;
+  const chatMe: Member | null =
+    me ??
+    members.find((member) => member.id === storedId) ??
+    (storedId
+      ? {
+          id: storedId,
+          first_name: "You",
+          last_name: "",
+          avatar_url: null,
+          created_at: new Date().toISOString(),
+          last_seen_at: new Date().toISOString(),
+        }
+      : null);
 
   return (
     <div className="min-h-screen pb-24">
@@ -183,6 +195,7 @@ function FlameHubPage() {
           <TabsList>
             <TabsTrigger value="games">Games</TabsTrigger>
             <TabsTrigger value="apps">Apps</TabsTrigger>
+            <TabsTrigger value="utilities">Web Utilities</TabsTrigger>
             <TabsTrigger value="soundboard">Soundboard</TabsTrigger>
           </TabsList>
 
@@ -192,8 +205,12 @@ function FlameHubPage() {
           <TabsContent value="apps" className="mt-6">
             <HubGrid items={APPS} label="App" />
           </TabsContent>
+          <TabsContent value="utilities" className="mt-6">
+            <HubGrid items={UTILITIES} label="Utility" />
+          </TabsContent>
           <TabsContent value="soundboard" className="mt-6 space-y-6">
             <HubGrid items={SOUNDBOARDS} label="Soundboard" />
+
             <div className="flame-surface overflow-hidden rounded-2xl">
               <div className="flex items-center justify-between border-b border-border px-4 py-3">
                 <h2 className="text-2xl">MyInstants live board</h2>
