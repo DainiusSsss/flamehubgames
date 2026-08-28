@@ -183,6 +183,7 @@ function FlameHubPage() {
           <TabsList>
             <TabsTrigger value="games">Games</TabsTrigger>
             <TabsTrigger value="apps">Apps</TabsTrigger>
+            <TabsTrigger value="utilities">Web Utilities</TabsTrigger>
             <TabsTrigger value="soundboard">Soundboard</TabsTrigger>
           </TabsList>
 
@@ -192,8 +193,12 @@ function FlameHubPage() {
           <TabsContent value="apps" className="mt-6">
             <HubGrid items={APPS} label="App" />
           </TabsContent>
+          <TabsContent value="utilities" className="mt-6">
+            <HubGrid items={UTILITIES} label="Utility" />
+          </TabsContent>
           <TabsContent value="soundboard" className="mt-6 space-y-6">
             <HubGrid items={SOUNDBOARDS} label="Soundboard" />
+
             <div className="flame-surface overflow-hidden rounded-2xl">
               <div className="flex items-center justify-between border-b border-border px-4 py-3">
                 <h2 className="text-2xl">MyInstants live board</h2>
