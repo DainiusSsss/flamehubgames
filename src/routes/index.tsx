@@ -11,7 +11,7 @@ import { SoundBooster } from "@/components/flamehub/SoundBooster";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getMyMember, listMembers, touchLastSeen } from "@/lib/flamehub.functions";
-import { APPS, GAMES, SOUNDBOARDS } from "@/lib/flamehub-data";
+import { APPS, GAMES, SOUNDBOARDS, UTILITIES } from "@/lib/flamehub-data";
 import {
   clearSession,
   initials,
