@@ -132,7 +132,19 @@ function FlameHubPage() {
   }
 
 
-  const chatMe = me ?? members.find((member) => member.id === storedId) ?? null;
+  const chatMe: Member | null =
+    me ??
+    members.find((member) => member.id === storedId) ??
+    (storedId
+      ? {
+          id: storedId,
+          first_name: "You",
+          last_name: "",
+          avatar_url: null,
+          created_at: new Date().toISOString(),
+          last_seen_at: new Date().toISOString(),
+        }
+      : null);
 
   return (
     <div className="min-h-screen pb-24">
