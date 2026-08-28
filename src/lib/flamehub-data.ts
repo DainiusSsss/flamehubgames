@@ -13,17 +13,17 @@ export type HubItem = {
 
 export const GAMES: HubItem[] = [
   {
-    id: "html5games",
-    name: "HTML5 Games",
-    url: "https://html5games.com",
-    tagline: "Big embed-friendly browser game portal",
+    id: "crazygames",
+    name: "CrazyGames",
+    url: "https://www.crazygames.com",
+    tagline: "Thousands of instant browser games",
     emoji: "🎮",
   },
   {
-    id: "cloudgames",
-    name: "Cloud Games",
-    url: "https://gamesnacks.com",
-    tagline: "Instant-play HTML5 games, no streaming engine needed",
+    id: "nowgg",
+    name: "now.gg",
+    url: "https://now.gg",
+    tagline: "Cloud-streamed mobile games",
     emoji: "☁️",
   },
   {
@@ -36,10 +36,8 @@ export const GAMES: HubItem[] = [
   {
     id: "driveu7",
     name: "Drive U 7",
-    url: "https://3kh0.github.io/",
-    direct: true,
-    note: "Loads raw from a GitHub Pages game drive",
-    tagline: "Unblocked games drive, hosted on GitHub Pages",
+    url: "https://sites.google.com/view/drive-u-7-home/home",
+    tagline: "The classic unblocked games drive",
     emoji: "🗂️",
   },
 ];
@@ -47,48 +45,38 @@ export const GAMES: HubItem[] = [
 export const APPS: HubItem[] = [
   {
     id: "tiktok",
-    name: "TikTok (ProxiTok)",
-    url: "https://pabloferreiro.xyz",
-    tagline: "Short-form video feed, mirror frontend",
+    name: "TikTok",
+    url: "https://www.tiktok.com",
+    tagline: "Short-form video feed",
     emoji: "🎵",
   },
   {
     id: "spotify",
-    name: "Music (Piped)",
-    url: "https://piped.video",
-    tagline: "Stream music with no DRM walls",
+    name: "Spotify",
+    url: "https://open.spotify.com",
+    tagline: "Music and podcasts",
     emoji: "🎧",
   },
   {
+    id: "snapchat",
+    name: "Snapchat",
+    url: "https://web.snapchat.com",
+    tagline: "Snaps and chats on the web",
+    emoji: "👻",
+  },
+  {
     id: "youtube",
-    name: "YouTube (Invidious)",
-    url: "https://yewtu.be",
-    tagline: "Videos and music, lightweight mirror",
+    name: "YouTube",
+    url: "https://www.youtube.com",
+    tagline: "Videos, music and live streams",
     emoji: "▶️",
   },
   {
     id: "chatgpt",
-    name: "AI Chat (DuckDuckGo)",
-    url: "https://duckduckgo.com/?q=DuckDuckGo+AI+Chat&ia=chat",
+    name: "ChatGPT",
+    url: "https://chatgpt.com",
     tagline: "AI homework and idea partner",
     emoji: "🤖",
-  },
-];
-
-export const UTILITIES: HubItem[] = [
-  {
-    id: "sketchpad",
-    name: "Drawing Pad",
-    url: "https://sketch.io/sketchpad/",
-    tagline: "Full drawing canvas in the browser",
-    emoji: "🎨",
-  },
-  {
-    id: "calculator",
-    name: "Retro Calculator",
-    url: "https://www.online-calculator.com/full-screen-calculator/",
-    tagline: "Classic full-screen calculator",
-    emoji: "🧮",
   },
 ];
 
