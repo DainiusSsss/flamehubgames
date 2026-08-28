@@ -1,5 +1,6 @@
-import { ExternalLink, Maximize2, Play } from "lucide-react";
+import { Maximize2, MonitorPlay, Play } from "lucide-react";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -8,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { openCloaked } from "@/lib/cloaker";
 import type { HubItem } from "@/lib/flamehub-data";
 import { proxyUrl } from "@/lib/flamehub-session";
 
@@ -21,6 +23,13 @@ export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
     void node.requestFullscreen?.().catch(() => undefined);
   };
 
+  const launch = (item: HubItem) => {
+    const opened = openCloaked(item.url, item.name);
+    if (!opened) {
+      toast.error("Allow pop-ups for FlameHub, then hit Launch again.");
+    }
+  };
+
   return (
     <>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -30,22 +39,17 @@ export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
               <span className="text-3xl" aria-hidden>
                 {item.emoji}
               </span>
-              <a
-                href={item.url}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="text-muted-foreground transition-colors hover:text-accent"
-                aria-label={`Open ${item.name} in a new tab`}
-              >
-                <ExternalLink className="size-4" />
-              </a>
             </div>
             <h3 className="mt-3 text-2xl leading-none">{item.name}</h3>
             <p className="mt-1 text-sm text-muted-foreground">{item.tagline}</p>
             <div className="mt-4 flex gap-2">
-              <Button size="sm" onClick={() => setActive(item)}>
+              <Button size="sm" onClick={() => launch(item)}>
                 <Play className="size-4" />
                 Launch
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => setActive(item)}>
+                <MonitorPlay className="size-4" />
+                In hub
               </Button>
             </div>
 
@@ -94,16 +98,15 @@ export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
               </div>
               <p className="text-xs text-muted-foreground">
                 Streamed through FlameHub&apos;s own <code>/render-site</code> route. Press
-                Fullscreen for the whole screen, or{" "}
-                <a
-                  href={active.url}
-                  target="_blank"
-                  rel="noreferrer noopener"
+                Fullscreen for the whole screen, or use{" "}
+                <button
+                  type="button"
                   className="text-accent underline"
+                  onClick={() => launch(active)}
                 >
-                  open it in a new tab
-                </a>
-                .
+                  Launch
+                </button>{" "}
+                to load it in a clean blank window.
               </p>
             </div>
           ) : null}
