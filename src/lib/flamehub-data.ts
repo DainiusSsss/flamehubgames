@@ -8,6 +8,8 @@ export type HubItem = {
   directOnly?: boolean;
   /** Load straight into the iframe instead of routing through /render-site. */
   direct?: boolean;
+  /** Open in a clean popup window instead of the cloaked about:blank iframe. */
+  popup?: boolean;
   note?: string;
 };
 
@@ -25,6 +27,7 @@ export const GAMES: HubItem[] = [
     url: "https://now.gg",
     tagline: "Cloud-streamed mobile games",
     emoji: "☁️",
+    popup: true,
   },
   {
     id: "slope",
@@ -49,6 +52,7 @@ export const APPS: HubItem[] = [
     url: "https://www.tiktok.com",
     tagline: "Short-form video feed",
     emoji: "🎵",
+    popup: true,
   },
   {
     id: "spotify",
@@ -56,6 +60,7 @@ export const APPS: HubItem[] = [
     url: "https://open.spotify.com",
     tagline: "Music and podcasts",
     emoji: "🎧",
+    popup: true,
   },
   {
     id: "snapchat",
@@ -63,6 +68,7 @@ export const APPS: HubItem[] = [
     url: "https://web.snapchat.com",
     tagline: "Snaps and chats on the web",
     emoji: "👻",
+    popup: true,
   },
   {
     id: "youtube",
@@ -70,6 +76,7 @@ export const APPS: HubItem[] = [
     url: "https://www.youtube.com",
     tagline: "Videos, music and live streams",
     emoji: "▶️",
+    popup: true,
   },
   {
     id: "chatgpt",
@@ -77,6 +84,7 @@ export const APPS: HubItem[] = [
     url: "https://chatgpt.com",
     tagline: "AI homework and idea partner",
     emoji: "🤖",
+    popup: true,
   },
 ];
 
