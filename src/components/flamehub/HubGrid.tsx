@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import { openCloaked } from "@/lib/cloaker";
 import type { HubItem } from "@/lib/flamehub-data";
-import { proxyUrl } from "@/lib/flamehub-session";
 
 export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
   const [active, setActive] = useState<HubItem | null>(null);
