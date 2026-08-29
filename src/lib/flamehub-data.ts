@@ -45,6 +45,22 @@ export const GAMES: HubItem[] = [
     emoji: "🗂️",
     popup: true,
   },
+  {
+    id: "poki",
+    name: "Poki",
+    url: "https://poki.com",
+    tagline: "Huge library of instant web games",
+    emoji: "🕹️",
+    popup: true,
+  },
+  {
+    id: "fnaf",
+    name: "Five Nights at Freddy's",
+    url: "https://fivenightsatfreddysgame.io",
+    tagline: "Survive the night shift",
+    emoji: "🐻",
+    popup: true,
+  },
 ];
 
 export const APPS: HubItem[] = [
@@ -86,6 +102,30 @@ export const APPS: HubItem[] = [
     url: "https://chatgpt.com",
     tagline: "AI homework and idea partner",
     emoji: "🤖",
+    popup: true,
+  },
+  {
+    id: "croxyproxy",
+    name: "CroxyProxy",
+    url: "https://www.croxyproxy.com",
+    tagline: "Free web proxy for blocked sites",
+    emoji: "🛡️",
+    popup: true,
+  },
+  {
+    id: "xboxcloud",
+    name: "Xbox Cloud Gaming",
+    url: "https://www.xbox.com/en-us/play",
+    tagline: "Stream console games in the browser",
+    emoji: "🎯",
+    popup: true,
+  },
+  {
+    id: "twitch",
+    name: "Twitch",
+    url: "https://twitch.tv",
+    tagline: "Live streams and esports",
+    emoji: "🟣",
     popup: true,
   },
 ];
