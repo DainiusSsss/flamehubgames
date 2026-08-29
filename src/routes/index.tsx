@@ -216,7 +216,7 @@ function FlameHubPage() {
               </div>
               <iframe
                 title="MyInstants soundboard"
-                src="/render-site?url=https%3A%2F%2Fwww.myinstants.com"
+                src="https://www.myinstants.com"
                 className="h-[70vh] w-full bg-background"
                 allow="autoplay; fullscreen"
                 allowFullScreen

@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import { openCloaked } from "@/lib/cloaker";
 import type { HubItem } from "@/lib/flamehub-data";
-import { proxyUrl } from "@/lib/flamehub-session";
 
 export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
   const [active, setActive] = useState<HubItem | null>(null);
@@ -84,7 +83,7 @@ export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
                 <iframe
                   key={active.id}
                   title={active.name}
-                  src={active.direct ? active.url : proxyUrl(active.url)}
+                  src={active.url}
                   className="size-full rounded-xl border border-border bg-background"
                   style={{ width: "100%", height: "100%" }}
                   allow="autoplay; fullscreen; clipboard-write; gamepad; microphone; camera; pointer-lock"
@@ -97,8 +96,8 @@ export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
                 />
               </div>
               <p className="text-xs text-muted-foreground">
-                Streamed through FlameHub&apos;s own <code>/render-site</code> route. Press
-                Fullscreen for the whole screen, or use{" "}
+                Loaded straight from the official site. Press Fullscreen for the whole screen, or
+                use{" "}
                 <button
                   type="button"
                   className="text-accent underline"
