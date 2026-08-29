@@ -20,6 +20,7 @@ export const GAMES: HubItem[] = [
     url: "https://www.crazygames.com",
     tagline: "Thousands of instant browser games",
     emoji: "🎮",
+    popup: true,
   },
   {
     id: "nowgg",
@@ -42,6 +43,7 @@ export const GAMES: HubItem[] = [
     url: "https://sites.google.com/view/drive-u-7-home/home",
     tagline: "The classic unblocked games drive",
     emoji: "🗂️",
+    popup: true,
   },
 ];
 
