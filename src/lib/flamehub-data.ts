@@ -8,6 +8,8 @@ export type HubItem = {
   directOnly?: boolean;
   /** Load straight into the iframe instead of routing through /render-site. */
   direct?: boolean;
+  /** Open in a clean popup window instead of the cloaked about:blank iframe. */
+  popup?: boolean;
   note?: string;
 };
 

@@ -23,6 +23,18 @@ export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
   };
 
   const launch = (item: HubItem) => {
+    if (item.popup) {
+      const win = window.open(
+        item.url,
+        "_blank",
+        "width=1200,height=800,menubar=no,status=no,toolbar=no"
+      );
+      if (!win) {
+        toast.error("Allow pop-ups for FlameHub, then hit Launch again.");
+      }
+      return;
+    }
+
     const opened = openCloaked(item.url, item.name);
     if (!opened) {
       toast.error("Allow pop-ups for FlameHub, then hit Launch again.");
