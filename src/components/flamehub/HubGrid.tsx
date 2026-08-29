@@ -96,8 +96,8 @@ export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
                 />
               </div>
               <p className="text-xs text-muted-foreground">
-                Streamed through FlameHub&apos;s own <code>/render-site</code> route. Press
-                Fullscreen for the whole screen, or use{" "}
+                Loaded straight from the official site. Press Fullscreen for the whole screen, or
+                use{" "}
                 <button
                   type="button"
                   className="text-accent underline"
