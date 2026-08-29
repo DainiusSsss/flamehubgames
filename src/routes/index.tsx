@@ -8,6 +8,7 @@ import { HubGrid } from "@/components/flamehub/HubGrid";
 import { MessagesDock } from "@/components/flamehub/MessagesDock";
 import { OwnerPanel } from "@/components/flamehub/OwnerPanel";
 import { SoundBooster } from "@/components/flamehub/SoundBooster";
+import { YouTubeWatcher } from "@/components/flamehub/YouTubeWatcher";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getMyMember, listMembers, touchLastSeen } from "@/lib/flamehub.functions";
@@ -201,7 +202,8 @@ function FlameHubPage() {
           <TabsContent value="games" className="mt-6">
             <HubGrid items={GAMES} label="Game" />
           </TabsContent>
-          <TabsContent value="apps" className="mt-6">
+          <TabsContent value="apps" className="mt-6 space-y-6">
+            <YouTubeWatcher />
             <HubGrid items={APPS} label="App" />
           </TabsContent>
           <TabsContent value="soundboard" className="mt-6 space-y-6">
