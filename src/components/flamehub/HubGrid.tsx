@@ -84,7 +84,7 @@ export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
                 <iframe
                   key={active.id}
                   title={active.name}
-                  src={active.direct ? active.url : proxyUrl(active.url)}
+                  src={active.url}
                   className="size-full rounded-xl border border-border bg-background"
                   style={{ width: "100%", height: "100%" }}
                   allow="autoplay; fullscreen; clipboard-write; gamepad; microphone; camera; pointer-lock"
