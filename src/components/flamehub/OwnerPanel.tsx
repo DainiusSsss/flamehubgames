@@ -25,6 +25,7 @@ export function OwnerPanel({ members, onMembersChanged }: Props) {
   const [checking, setChecking] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [drafts, setDrafts] = useState<Record<string, { first: string; last: string }>>({});
 
   const draftFor = (member: Member) =>
