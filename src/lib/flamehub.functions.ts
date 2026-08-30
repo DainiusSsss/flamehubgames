@@ -81,6 +81,18 @@ export const unlockOwnerPanel = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const deleteMember = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) =>
+    z
+      .object({ ownerCode: z.string().min(1).max(64), memberId: z.string().uuid() })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { deleteMemberAsOwner } = await import("./flamehub.server");
+    await deleteMemberAsOwner(data.ownerCode, data.memberId);
+    return { ok: true };
+  });
+
 export const renameMember = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) =>
     z
