@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { renameMember, unlockOwnerPanel } from "@/lib/flamehub.functions";
+import { deleteMember, renameMember, unlockOwnerPanel } from "@/lib/flamehub.functions";
 import type { Member } from "@/lib/flamehub-session";
 
 type Props = { members: Member[]; onMembersChanged: () => void };
