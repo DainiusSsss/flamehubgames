@@ -102,6 +102,14 @@ export async function sendMessageAs(
   if (error) throw new Error("Could not send message");
 }
 
+export async function deleteMemberAsOwner(ownerCode: string, memberId: string) {
+  assertOwnerCode(ownerCode);
+  await supabaseAdmin.from("messages").delete().eq("sender_id", memberId);
+  await supabaseAdmin.from("messages").delete().eq("recipient_id", memberId);
+  const { error } = await supabaseAdmin.from("members").delete().eq("id", memberId);
+  if (error) throw new Error("Could not delete member");
+}
+
 export async function renameMemberAsOwner(
   ownerCode: string,
   memberId: string,
