@@ -1,4 +1,4 @@
-import { Youtube } from "lucide-react";
+import { X, Youtube } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -24,6 +24,7 @@ function extractVideoId(input: string): string | null {
 
 export function YouTubeWatcher() {
   const [value, setValue] = useState("");
+  const [videoId, setVideoId] = useState<string | null>(null);
 
   const load = (event: React.FormEvent) => {
     event.preventDefault();
@@ -32,32 +33,54 @@ export function YouTubeWatcher() {
       toast.error("Paste a full YouTube link or an 11-character video ID.");
       return;
     }
-    const embed = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
-    const win = window.open(
-      embed,
-      "_blank",
-      "width=1200,height=800,menubar=no,status=no,toolbar=no",
-    );
-    if (!win) toast.error("Allow pop-ups for FlameHub, then hit the button again.");
+    setVideoId(id);
   };
 
   return (
-    <form
-      onSubmit={load}
-      className="flame-surface flex flex-col gap-3 rounded-2xl p-5 sm:flex-row sm:items-center"
-    >
-      <div className="flex items-center gap-2">
-        <Youtube className="size-5 text-accent" />
-        <p className="text-lg leading-none">Unblocked YouTube Watcher</p>
-      </div>
-      <Input
-        value={value}
-        onChange={(event) => setValue(event.target.value)}
-        placeholder="Paste a YouTube link…"
-        className="sm:ml-auto sm:max-w-sm"
-        aria-label="YouTube video URL"
-      />
-      <Button type="submit">Load Unblocked Video</Button>
-    </form>
+    <>
+      <form
+        onSubmit={load}
+        className="flame-surface flex flex-col gap-3 rounded-2xl p-5 sm:flex-row sm:items-center"
+      >
+        <div className="flex items-center gap-2">
+          <Youtube className="size-5 text-accent" />
+          <p className="text-lg leading-none">Unblocked YouTube Watcher</p>
+        </div>
+        <Input
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          placeholder="Paste a YouTube link…"
+          className="sm:ml-auto sm:max-w-sm"
+          aria-label="YouTube video URL"
+        />
+        <Button type="submit">Load Unblocked Video</Button>
+      </form>
+
+      {videoId ? (
+        <div className="fixed inset-0 z-50 bg-background">
+          <Button
+            variant="secondary"
+            size="icon"
+            aria-label="Close video"
+            className="absolute right-4 top-4 z-10"
+            onClick={() => setVideoId(null)}
+          >
+            <X className="size-5" />
+          </Button>
+          <iframe
+            title="YouTube player"
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
+            className="h-full w-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+            allowFullScreen
+            {...({
+              allowfullscreen: "true",
+              webkitallowfullscreen: "true",
+              mozallowfullscreen: "true",
+            } as Record<string, string>)}
+          />
+        </div>
+      ) : null}
+    </>
   );
 }
