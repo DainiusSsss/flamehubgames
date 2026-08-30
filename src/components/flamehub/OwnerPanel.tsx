@@ -65,6 +65,21 @@ export function OwnerPanel({ members, onMembersChanged }: Props) {
     }
   };
 
+  const remove = async (member: Member) => {
+    if (!window.confirm(`Delete ${member.first_name} ${member.last_name}? This can't be undone.`))
+      return;
+    setDeletingId(member.id);
+    try {
+      await deleteMember({ data: { ownerCode: code, memberId: member.id } });
+      toast.success("Account deleted.");
+      onMembersChanged();
+    } catch {
+      toast.error("Couldn't delete that account.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   return (
     <Dialog
       open={open}
