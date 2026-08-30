@@ -173,6 +173,19 @@ export function OwnerPanel({ members, onMembersChanged }: Props) {
                         {savingId === member.id ? <Loader2 className="size-4 animate-spin" /> : null}
                         Save
                       </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        aria-label={`Delete ${member.first_name}`}
+                        onClick={() => void remove(member)}
+                        disabled={deletingId === member.id}
+                      >
+                        {deletingId === member.id ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="size-4" />
+                        )}
+                      </Button>
                     </div>
                   );
                 })
