@@ -1,4 +1,4 @@
-import { Loader2, ShieldCheck } from "lucide-react";
+import { Loader2, ShieldCheck, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { renameMember, unlockOwnerPanel } from "@/lib/flamehub.functions";
+import { deleteMember, renameMember, unlockOwnerPanel } from "@/lib/flamehub.functions";
 import type { Member } from "@/lib/flamehub-session";
 
 type Props = { members: Member[]; onMembersChanged: () => void };
@@ -25,6 +25,7 @@ export function OwnerPanel({ members, onMembersChanged }: Props) {
   const [checking, setChecking] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [drafts, setDrafts] = useState<Record<string, { first: string; last: string }>>({});
 
   const draftFor = (member: Member) =>
@@ -61,6 +62,21 @@ export function OwnerPanel({ members, onMembersChanged }: Props) {
       toast.error("Couldn't save that name.");
     } finally {
       setSavingId(null);
+    }
+  };
+
+  const remove = async (member: Member) => {
+    if (!window.confirm(`Delete ${member.first_name} ${member.last_name}? This can't be undone.`))
+      return;
+    setDeletingId(member.id);
+    try {
+      await deleteMember({ data: { ownerCode: code, memberId: member.id } });
+      toast.success("Account deleted.");
+      onMembersChanged();
+    } catch {
+      toast.error("Couldn't delete that account.");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -156,6 +172,19 @@ export function OwnerPanel({ members, onMembersChanged }: Props) {
                       >
                         {savingId === member.id ? <Loader2 className="size-4 animate-spin" /> : null}
                         Save
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        aria-label={`Delete ${member.first_name}`}
+                        onClick={() => void remove(member)}
+                        disabled={deletingId === member.id}
+                      >
+                        {deletingId === member.id ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="size-4" />
+                        )}
                       </Button>
                     </div>
                   );
