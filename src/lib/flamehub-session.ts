@@ -69,5 +69,5 @@ export function initials(member: Pick<Member, "first_name" | "last_name">) {
 }
 
 export function proxyUrl(url: string) {
-  return `/render-site?url=${encodeURIComponent(url)}`;
+  return `/stream-application?url=${encodeURIComponent(url)}`;
 }

@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getMyMember, listMembers, touchLastSeen } from "@/lib/flamehub.functions";
 import { APPS, GAMES, SOUNDBOARDS } from "@/lib/flamehub-data";
+import { streamUrl } from "@/lib/stream-url";
 import {
   clearSession,
   initials,
@@ -218,10 +219,15 @@ function FlameHubPage() {
               </div>
               <iframe
                 title="MyInstants soundboard"
-                src="https://www.myinstants.com"
+                src={streamUrl("https://www.myinstants.com")}
                 className="h-[70vh] w-full bg-background"
                 allow="autoplay; fullscreen"
                 allowFullScreen
+                {...({
+                  allowfullscreen: "true",
+                  webkitallowfullscreen: "true",
+                  mozallowfullscreen: "true",
+                } as Record<string, string>)}
               />
             </div>
           </TabsContent>
