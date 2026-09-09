@@ -146,8 +146,10 @@ export async function renderSite(request: Request): Promise<Response> {
       "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
     "accept-language": "en-US,en;q=0.9",
     referer: parsed.origin + "/",
-    origin: parsed.origin,
   });
+  // Only cross-origin write requests need an Origin header; sending it on plain
+  // GETs makes some sites (e.g. MyInstants) answer 403.
+  if (request.method === "POST") outgoing.set("origin", parsed.origin);
   const range = request.headers.get("range");
   if (range) outgoing.set("range", range);
 
