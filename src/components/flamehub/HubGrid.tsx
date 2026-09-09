@@ -1,45 +1,35 @@
-import { Maximize2, MonitorPlay, Play } from "lucide-react";
-import { useRef, useState } from "react";
-import { toast } from "sonner";
+import { Maximize2, Play, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { openCloaked } from "@/lib/cloaker";
 import type { HubItem } from "@/lib/flamehub-data";
+import { streamUrl } from "@/lib/stream-url";
+
+const FRAME_ALLOW =
+  "autoplay; fullscreen; clipboard-write; gamepad; microphone; camera; pointer-lock; encrypted-media";
+
+const FULLSCREEN_ATTRS = {
+  allowfullscreen: "true",
+  webkitallowfullscreen: "true",
+  mozallowfullscreen: "true",
+} as Record<string, string>;
 
 export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
   const [active, setActive] = useState<HubItem | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
 
   const goFullscreen = () => {
-    const node = stageRef.current;
-    if (!node) return;
-    void node.requestFullscreen?.().catch(() => undefined);
+    void stageRef.current?.requestFullscreen?.().catch(() => undefined);
   };
 
-  const launch = (item: HubItem) => {
-    if (item.popup) {
-      const win = window.open(
-        item.url,
-        "_blank",
-        "width=1200,height=800,menubar=no,status=no,toolbar=no"
-      );
-      if (!win) {
-        toast.error("Allow pop-ups for FlameHub, then hit Launch again.");
-      }
-      return;
-    }
-
-    const opened = openCloaked(item.url, item.name);
-    if (!opened) {
-      toast.error("Allow pop-ups for FlameHub, then hit Launch again.");
-    }
-  };
+  useEffect(() => {
+    if (!active) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setActive(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [active]);
 
   return (
     <>
@@ -54,13 +44,9 @@ export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
             <h3 className="mt-3 text-2xl leading-none">{item.name}</h3>
             <p className="mt-1 text-sm text-muted-foreground">{item.tagline}</p>
             <div className="mt-4 flex gap-2">
-              <Button size="sm" onClick={() => launch(item)}>
+              <Button size="sm" onClick={() => setActive(item)}>
                 <Play className="size-4" />
                 Launch
-              </Button>
-              <Button size="sm" variant="outline" onClick={() => setActive(item)}>
-                <MonitorPlay className="size-4" />
-                In hub
               </Button>
             </div>
 
@@ -71,58 +57,37 @@ export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
         ))}
       </div>
 
-      <Dialog open={active !== null} onOpenChange={(open) => !open && setActive(null)}>
-        <DialogContent className="h-[90vh] max-w-[96vw] gap-3 p-4">
-          <DialogHeader>
-            <DialogTitle className="flex flex-wrap items-center gap-2 text-2xl">
-              {active?.emoji} {active?.name}
-              <span className="text-xs font-normal text-muted-foreground">{label} preview</span>
-              <Button
-                size="sm"
-                variant="outline"
-                className="ml-auto"
-                onClick={goFullscreen}
-                type="button"
-              >
+      {active ? (
+        <div className="fixed inset-0 z-50 flex flex-col bg-background">
+          <div className="flex items-center gap-2 border-b border-border px-3 py-2">
+            <span className="truncate text-lg">
+              {active.emoji} {active.name}
+              <span className="ml-2 text-xs text-muted-foreground">{label}</span>
+            </span>
+            <div className="ml-auto flex gap-2">
+              <Button size="sm" variant="outline" type="button" onClick={goFullscreen}>
                 <Maximize2 className="size-4" />
                 Fullscreen
               </Button>
-            </DialogTitle>
-          </DialogHeader>
-          {active ? (
-            <div className="flex min-h-0 flex-1 flex-col gap-2">
-              <div ref={stageRef} className="min-h-0 flex-1 bg-background">
-                <iframe
-                  key={active.id}
-                  title={active.name}
-                  src={active.url}
-                  className="size-full rounded-xl border border-border bg-background"
-                  style={{ width: "100%", height: "100%" }}
-                  allow="autoplay; fullscreen; clipboard-write; gamepad; microphone; camera; pointer-lock"
-                  allowFullScreen
-                  {...({
-                    allowfullscreen: "true",
-                    webkitallowfullscreen: "true",
-                    mozallowfullscreen: "true",
-                  } as Record<string, string>)}
-                />
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Loaded straight from the official site. Press Fullscreen for the whole screen, or
-                use{" "}
-                <button
-                  type="button"
-                  className="text-accent underline"
-                  onClick={() => launch(active)}
-                >
-                  Launch
-                </button>{" "}
-                to load it in a clean blank window.
-              </p>
+              <Button size="sm" variant="outline" type="button" onClick={() => setActive(null)}>
+                <X className="size-4" />
+                Close
+              </Button>
             </div>
-          ) : null}
-        </DialogContent>
-      </Dialog>
+          </div>
+          <div ref={stageRef} className="min-h-0 flex-1 bg-background">
+            <iframe
+              key={active.id}
+              title={active.name}
+              src={streamUrl(active.url)}
+              style={{ width: "100%", height: "100%", border: 0, display: "block" }}
+              allow={FRAME_ALLOW}
+              allowFullScreen
+              {...FULLSCREEN_ATTRS}
+            />
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }

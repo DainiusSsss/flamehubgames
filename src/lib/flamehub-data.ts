@@ -4,12 +4,6 @@ export type HubItem = {
   url: string;
   tagline: string;
   emoji: string;
-  /** Sites that hard-block embedding — they open in their own tab instead. */
-  directOnly?: boolean;
-  /** Load straight into the iframe instead of routing through /render-site. */
-  direct?: boolean;
-  /** Open in a clean popup window instead of the cloaked about:blank iframe. */
-  popup?: boolean;
   note?: string;
 };
 
@@ -20,7 +14,6 @@ export const GAMES: HubItem[] = [
     url: "https://www.crazygames.com",
     tagline: "Thousands of instant browser games",
     emoji: "🎮",
-    popup: true,
   },
   {
     id: "nowgg",
@@ -28,7 +21,6 @@ export const GAMES: HubItem[] = [
     url: "https://now.gg",
     tagline: "Cloud-streamed mobile games",
     emoji: "☁️",
-    popup: true,
   },
   {
     id: "slope",
@@ -43,7 +35,6 @@ export const GAMES: HubItem[] = [
     url: "https://sites.google.com/view/drive-u-7-home/home",
     tagline: "The classic unblocked games drive",
     emoji: "🗂️",
-    popup: true,
   },
   {
     id: "poki",
@@ -51,7 +42,6 @@ export const GAMES: HubItem[] = [
     url: "https://poki.com",
     tagline: "Huge library of instant web games",
     emoji: "🕹️",
-    popup: true,
   },
   {
     id: "fnaf",
@@ -59,7 +49,6 @@ export const GAMES: HubItem[] = [
     url: "https://fivenightsatfreddysgame.io",
     tagline: "Survive the night shift",
     emoji: "🐻",
-    popup: true,
   },
 ];
 
@@ -70,7 +59,6 @@ export const APPS: HubItem[] = [
     url: "https://www.tiktok.com",
     tagline: "Short-form video feed",
     emoji: "🎵",
-    popup: true,
   },
   {
     id: "spotify",
@@ -78,7 +66,6 @@ export const APPS: HubItem[] = [
     url: "https://open.spotify.com",
     tagline: "Music and podcasts",
     emoji: "🎧",
-    popup: true,
   },
   {
     id: "snapchat",
@@ -86,7 +73,6 @@ export const APPS: HubItem[] = [
     url: "https://web.snapchat.com",
     tagline: "Snaps and chats on the web",
     emoji: "👻",
-    popup: true,
   },
   {
     id: "youtube",
@@ -94,7 +80,6 @@ export const APPS: HubItem[] = [
     url: "https://www.youtube.com",
     tagline: "Videos, music and live streams",
     emoji: "▶️",
-    popup: true,
   },
   {
     id: "chatgpt",
@@ -102,7 +87,6 @@ export const APPS: HubItem[] = [
     url: "https://chatgpt.com",
     tagline: "AI homework and idea partner",
     emoji: "🤖",
-    popup: true,
   },
   {
     id: "croxyproxy",
@@ -110,7 +94,6 @@ export const APPS: HubItem[] = [
     url: "https://www.croxyproxy.com",
     tagline: "Free web proxy for blocked sites",
     emoji: "🛡️",
-    popup: true,
   },
   {
     id: "xboxcloud",
@@ -118,7 +101,6 @@ export const APPS: HubItem[] = [
     url: "https://www.xbox.com/en-us/play",
     tagline: "Stream console games in the browser",
     emoji: "🎯",
-    popup: true,
   },
   {
     id: "twitch",
@@ -126,7 +108,6 @@ export const APPS: HubItem[] = [
     url: "https://twitch.tv",
     tagline: "Live streams and esports",
     emoji: "🟣",
-    popup: true,
   },
 ];
 

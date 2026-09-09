@@ -10,53 +10,55 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as RenderSiteRouteImport } from './routes/render-site'
-import { Route as ApiPublicRenderSiteRouteImport } from './routes/api/public/render-site'
+import { Route as StreamApplicationRouteImport } from './routes/stream-application'
+import { Route as ApiPublicStreamApplicationRouteImport } from './routes/api/public/stream-application'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RenderSiteRoute = RenderSiteRouteImport.update({
-  id: '/render-site',
-  path: '/render-site',
+const StreamApplicationRoute = StreamApplicationRouteImport.update({
+  id: '/stream-application',
+  path: '/stream-application',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicRenderSiteRoute = ApiPublicRenderSiteRouteImport.update({
-  id: '/api/public/render-site',
-  path: '/api/public/render-site',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const ApiPublicStreamApplicationRoute =
+  ApiPublicStreamApplicationRouteImport.update({
+    id: '/api/public/stream-application',
+    path: '/api/public/stream-application',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/render-site': typeof RenderSiteRoute
-  '/api/public/render-site': typeof ApiPublicRenderSiteRoute
+  '/stream-application': typeof StreamApplicationRoute
+  '/api/public/stream-application': typeof ApiPublicStreamApplicationRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/render-site': typeof RenderSiteRoute
-  '/api/public/render-site': typeof ApiPublicRenderSiteRoute
+  '/stream-application': typeof StreamApplicationRoute
+  '/api/public/stream-application': typeof ApiPublicStreamApplicationRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/render-site': typeof RenderSiteRoute
-  '/api/public/render-site': typeof ApiPublicRenderSiteRoute
+  '/stream-application': typeof StreamApplicationRoute
+  '/api/public/stream-application': typeof ApiPublicStreamApplicationRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/render-site' | '/api/public/render-site'
+  fullPaths: '/' | '/stream-application' | '/api/public/stream-application'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/render-site' | '/api/public/render-site'
-  id: '__root__' | '/' | '/render-site' | '/api/public/render-site'
+  to: '/' | '/stream-application' | '/api/public/stream-application'
+  id:
+    '__root__' | '/' | '/stream-application' | '/api/public/stream-application'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  RenderSiteRoute: typeof RenderSiteRoute
-  ApiPublicRenderSiteRoute: typeof ApiPublicRenderSiteRoute
+  StreamApplicationRoute: typeof StreamApplicationRoute
+  ApiPublicStreamApplicationRoute: typeof ApiPublicStreamApplicationRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -68,18 +70,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/render-site': {
-      id: '/render-site'
-      path: '/render-site'
-      fullPath: '/render-site'
-      preLoaderRoute: typeof RenderSiteRouteImport
+    '/stream-application': {
+      id: '/stream-application'
+      path: '/stream-application'
+      fullPath: '/stream-application'
+      preLoaderRoute: typeof StreamApplicationRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/render-site': {
-      id: '/api/public/render-site'
-      path: '/api/public/render-site'
-      fullPath: '/api/public/render-site'
-      preLoaderRoute: typeof ApiPublicRenderSiteRouteImport
+    '/api/public/stream-application': {
+      id: '/api/public/stream-application'
+      path: '/api/public/stream-application'
+      fullPath: '/api/public/stream-application'
+      preLoaderRoute: typeof ApiPublicStreamApplicationRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -87,8 +89,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  RenderSiteRoute: RenderSiteRoute,
-  ApiPublicRenderSiteRoute: ApiPublicRenderSiteRoute,
+  StreamApplicationRoute: StreamApplicationRoute,
+  ApiPublicStreamApplicationRoute: ApiPublicStreamApplicationRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

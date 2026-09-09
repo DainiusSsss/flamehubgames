@@ -1,7 +1,7 @@
 const BLOCKED_HOSTS =
   /^(localhost|127\.|0\.|10\.|169\.254\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|\[?::1)/i;
 
-const PROXY_PATH = "/render-site";
+const PROXY_PATH = "/stream-application";
 
 /** Headers that stop a page from rendering inside our own window. */
 const STRIPPED_RESPONSE_HEADERS = [
@@ -107,7 +107,7 @@ function passthroughHeaders(upstream: Response, extra: Record<string, string> = 
 }
 
 /**
- * Server-side page fetcher behind /render-site?url=...
+ * Server-side page fetcher behind /stream-application?url=...
  * Fetches external pages and their sub-resources, strips framing restrictions and
  * streams non-HTML bodies straight through so media and scripts stay responsive.
  */
@@ -145,9 +145,22 @@ export async function renderSite(request: Request): Promise<Response> {
       request.headers.get("accept") ??
       "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
     "accept-language": "en-US,en;q=0.9",
+    "accept-encoding": "gzip, deflate",
+    "cache-control": "no-cache",
+    pragma: "no-cache",
+    "upgrade-insecure-requests": "1",
+    "sec-ch-ua": '"Chromium";v="126", "Google Chrome";v="126", "Not-A.Brand";v="99"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"Windows"',
+    "sec-fetch-dest": "document",
+    "sec-fetch-mode": "navigate",
+    "sec-fetch-site": "none",
+    "sec-fetch-user": "?1",
     referer: parsed.origin + "/",
-    origin: parsed.origin,
   });
+  // Only cross-origin write requests need an Origin header; sending it on plain
+  // GETs makes some sites (e.g. MyInstants) answer 403.
+  if (request.method === "POST") outgoing.set("origin", parsed.origin);
   const range = request.headers.get("range");
   if (range) outgoing.set("range", range);
 
@@ -179,7 +192,7 @@ export async function renderSite(request: Request): Promise<Response> {
       }),
     });
   } catch (error) {
-    console.error("render-site failed", error);
+    console.error("stream-application failed", error);
     return new Response(
       `<!doctype html><html><body style="font-family:system-ui;background:#1a120e;color:#fdf1e2;padding:32px">
         <h1>Preview unavailable</h1>
