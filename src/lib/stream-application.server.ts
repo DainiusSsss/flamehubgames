@@ -1,7 +1,7 @@
 const BLOCKED_HOSTS =
   /^(localhost|127\.|0\.|10\.|169\.254\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|\[?::1)/i;
 
-const PROXY_PATH = "/render-site";
+const PROXY_PATH = "/stream-application";
 
 /** Headers that stop a page from rendering inside our own window. */
 const STRIPPED_RESPONSE_HEADERS = [
@@ -107,7 +107,7 @@ function passthroughHeaders(upstream: Response, extra: Record<string, string> = 
 }
 
 /**
- * Server-side page fetcher behind /render-site?url=...
+ * Server-side page fetcher behind /stream-application?url=...
  * Fetches external pages and their sub-resources, strips framing restrictions and
  * streams non-HTML bodies straight through so media and scripts stay responsive.
  */
@@ -179,7 +179,7 @@ export async function renderSite(request: Request): Promise<Response> {
       }),
     });
   } catch (error) {
-    console.error("render-site failed", error);
+    console.error("stream-application failed", error);
     return new Response(
       `<!doctype html><html><body style="font-family:system-ui;background:#1a120e;color:#fdf1e2;padding:32px">
         <h1>Preview unavailable</h1>
