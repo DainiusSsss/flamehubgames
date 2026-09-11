@@ -5,7 +5,6 @@ export type HubItem = {
   tagline: string;
   emoji: string;
   note?: string;
-  translateProxy?: boolean;
 };
 
 export const GAMES: HubItem[] = [
