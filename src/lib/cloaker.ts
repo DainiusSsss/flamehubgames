@@ -1,17 +1,18 @@
 export function openCloaked(url: string): boolean {
-  const win = window.open("about:blank", "_blank", "width=1200,height=800,menubar=no,status=no,toolbar=no");
-  if (!win) return false;
-
-  const iframe = win.document.createElement("iframe");
-  iframe.src = url;
-  iframe.style.width = "100vw";
-  iframe.style.height = "100vh";
-  iframe.style.border = "none";
-  iframe.setAttribute("allow", "fullscreen");
-  iframe.setAttribute("allowfullscreen", "true");
-  win.document.body.style.margin = "0";
-  win.document.body.style.padding = "0";
-  win.document.body.style.overflow = "hidden";
-  win.document.body.appendChild(iframe);
-  return true;
+  const safeUrl = JSON.stringify(url);
+  const rawHtml = `
+<html>
+<head>
+  <title>New Tab</title>
+  <style>html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }</style>
+</head>
+<body>
+  <script>window.location.replace(${safeUrl});<\/script>
+</body>
+</html>
+`;
+  const blob = new Blob([rawHtml], { type: "text/html" });
+  const blobUrl = URL.createObjectURL(blob);
+  const win = window.open(blobUrl, "_blank", "width=1200,height=800,menubar=no,status=no,toolbar=no");
+  return !!win;
 }
