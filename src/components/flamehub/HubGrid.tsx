@@ -1,9 +1,22 @@
 import { Maximize2, Play, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import type { HubItem } from "@/lib/flamehub-data";
 import { streamUrl } from "@/lib/stream-url";
+
+const openTranslateProxy = (url: string) => {
+  const proxyUrl = `https://translate.google.com/translate?hl=en&sl=auto&tl=en&u=${encodeURIComponent(url)}`;
+  const win = window.open(
+    proxyUrl,
+    "_blank",
+    "width=1200,height=800,menubar=no,status=no,toolbar=no"
+  );
+  if (!win) {
+    toast.error("Popup blocked! Allow popups for FlameHub.");
+  }
+};
 
 const FRAME_ALLOW =
   "autoplay; fullscreen; clipboard-write; gamepad; microphone; camera; pointer-lock; encrypted-media";
@@ -44,7 +57,16 @@ export function HubGrid({ items, label }: { items: HubItem[]; label: string }) {
             <h3 className="mt-3 text-2xl leading-none">{item.name}</h3>
             <p className="mt-1 text-sm text-muted-foreground">{item.tagline}</p>
             <div className="mt-4 flex gap-2">
-              <Button size="sm" onClick={() => setActive(item)}>
+              <Button
+                size="sm"
+                onClick={() => {
+                  if (item.translateProxy) {
+                    openTranslateProxy(item.url);
+                  } else {
+                    setActive(item);
+                  }
+                }}
+              >
                 <Play className="size-4" />
                 Launch
               </Button>
