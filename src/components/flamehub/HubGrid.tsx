@@ -1,9 +1,22 @@
 import { Maximize2, Play, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import type { HubItem } from "@/lib/flamehub-data";
 import { streamUrl } from "@/lib/stream-url";
+
+const openTranslateProxy = (url: string) => {
+  const proxyUrl = `https://translate.google.com/translate?hl=en&sl=auto&tl=en&u=${encodeURIComponent(url)}`;
+  const win = window.open(
+    proxyUrl,
+    "_blank",
+    "width=1200,height=800,menubar=no,status=no,toolbar=no"
+  );
+  if (!win) {
+    toast.error("Popup blocked! Allow popups for FlameHub.");
+  }
+};
 
 const FRAME_ALLOW =
   "autoplay; fullscreen; clipboard-write; gamepad; microphone; camera; pointer-lock; encrypted-media";
