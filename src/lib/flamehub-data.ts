@@ -59,7 +59,6 @@ export const APPS: HubItem[] = [
     url: "https://www.tiktok.com",
     tagline: "Short-form video feed",
     emoji: "🎵",
-    translateProxy: true,
   },
   {
     id: "spotify",
@@ -67,7 +66,6 @@ export const APPS: HubItem[] = [
     url: "https://open.spotify.com",
     tagline: "Music and podcasts",
     emoji: "🎧",
-    translateProxy: true,
   },
   {
     id: "snapchat",
@@ -75,7 +73,6 @@ export const APPS: HubItem[] = [
     url: "https://web.snapchat.com",
     tagline: "Snaps and chats on the web",
     emoji: "👻",
-    translateProxy: true,
   },
   {
     id: "youtube",
@@ -83,7 +80,6 @@ export const APPS: HubItem[] = [
     url: "https://www.youtube.com",
     tagline: "Videos, music and live streams",
     emoji: "▶️",
-    translateProxy: true,
   },
   {
     id: "chatgpt",
@@ -91,7 +87,6 @@ export const APPS: HubItem[] = [
     url: "https://chatgpt.com",
     tagline: "AI homework and idea partner",
     emoji: "🤖",
-    translateProxy: true,
   },
   {
     id: "croxyproxy",
